@@ -160,4 +160,23 @@ export class Candidate {
         if (!data) return null;
         return new Candidate(data);
     }
+
+    static async findManyByPositionId(positionId: number): Promise<Candidate[]> {
+        return await prisma.candidate.findMany({
+            where: {
+                applications: {
+                    some: {
+                        positionId: positionId,
+                    },
+                },
+            },
+            include: {
+                applications: {
+                    include: {
+                        interviews: true,
+                    },
+                },
+            },
+        });
+    }
 }
